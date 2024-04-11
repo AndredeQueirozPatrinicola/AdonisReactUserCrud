@@ -1,0 +1,59 @@
+services:
+  api:
+    image: api:latest
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    volumes:
+      - ./backend:/app
+      - .env:/app/.env
+    ports: 
+      - 5000:5000
+    command:
+      - sh
+      - -c
+      - |
+        cd /app/ &&
+        npm install &&
+        npm run dev
+
+  react:
+    image: frontend-dev:latest
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    volumes:
+      - ./frontend:/app
+      - .env:/app/.env
+    ports: 
+      - 3000:3000
+    command:
+      - sh
+      - -c
+      - |
+        cd /app/ &&
+        npm install &&
+        npm run dev
+
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'adonis'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mysqldb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysqldb:
