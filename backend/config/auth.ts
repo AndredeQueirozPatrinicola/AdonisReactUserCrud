@@ -3,9 +3,9 @@ import { InferAuthEvents, Authenticators } from '@adonisjs/auth/types'
 import { sessionGuard, sessionUserProvider } from '@adonisjs/auth/session'
 
 const authConfig = defineConfig({
-  default: 'web',
+  default: 'api',
   guards: {
-    web: sessionGuard({
+    api: sessionGuard({
       useRememberMeTokens: false,
       provider: sessionUserProvider({
         model: () => import('#models/user')
