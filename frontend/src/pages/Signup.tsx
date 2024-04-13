@@ -1,23 +1,24 @@
-import { LoginForm } from "../components/LoginForm"
+
+import { SignupForm } from "../components/SignupForm"
 import { FormTitle } from "../components/FormTitle"
 import { NavLink } from "react-router-dom";
 
-export const Login = () => {
+export const Signup = () => {
 
     return (
         <div className="flex flex-col items-center justify-center mt-28">
             <FormTitle
-                mainText="Login to your account!"
-                questionText="Still don't have an account?"
+                mainText="Create an account!"
+                questionText="Already have an account?"
             >
                 <NavLink
                     className='text-[#863ec9] font-bold'
-                    to='/signup'
+                    to='/login'
                 >
-                    Signup!
+                    Login!
                 </NavLink>
             </FormTitle>
-            <LoginForm/>
+            <SignupForm/>
         </div>
     )
 }

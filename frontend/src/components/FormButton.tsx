@@ -8,7 +8,7 @@ interface FormButtonProps {
 export const FormButton: React.FC<FormButtonProps> = ({ handleSubmit, buttonValue }) => {
     return (
         <button
-            className="bg-[#863ec9] text-white rounded-md m-2 h-10"
+            className="bg-[#863ec9] text-white rounded-md mt-4 h-10"
             onClick={handleSubmit}
         >{buttonValue}</button>
     );

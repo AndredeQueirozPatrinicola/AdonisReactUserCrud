@@ -12,7 +12,7 @@ export const ErrorMessagesBox: React.FC<ErrorMessagesBoxProps> = ({ authErrorMes
             {
                 authErrorMessages.map((value, index) => {
                     return (
-                        <span>{value.message}</span>
+                        <span key={index}>{value.message}</span>
                     )
                 })
             }

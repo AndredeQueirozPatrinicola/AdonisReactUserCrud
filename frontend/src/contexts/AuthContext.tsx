@@ -1,6 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
 import { createContext, ReactNode, useEffect, useState } from 'react'
+
 import { useNavigate } from 'react-router-dom';
 
 import { Props } from '../types/Props';
@@ -39,8 +40,11 @@ const AuthProvider = ({children}: Props) => {
     const contextData: AuthContextData = {
       authenticated,
       setAuthenticated,
+
       login, 
-      authErrorMessages
+
+      authErrorMessages,
+      setAuthErrorMessages
     };
     
     return (

@@ -1,0 +1,1 @@
+export const passwordRegex: RegExp = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;

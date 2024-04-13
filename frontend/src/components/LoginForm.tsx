@@ -37,6 +37,7 @@ export const LoginForm = () => {
                     inputName="email"
                     inputType="text"
                     handleChange={handleChange}
+                    fieldError=""
                 />
 
                 <FormInput
@@ -44,6 +45,7 @@ export const LoginForm = () => {
                     inputName="password"
                     inputType="password"
                     handleChange={handleChange}
+                    fieldError=""
                 />
 
                 <FormButton
