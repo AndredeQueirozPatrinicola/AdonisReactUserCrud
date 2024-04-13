@@ -31,7 +31,7 @@ const AuthProvider = ({children}: Props) => {
         .catch((err: AxiosError) => {
             const data: JwtErrorResponse | unknown = err.response?.data;
             if (Array.isArray(data.errors)) {
-                setAuthErrorMessages(prev => [...prev, ...data.errors]);
+                setAuthErrorMessages([...data.errors]);
             }
         });
     }
