@@ -24,7 +24,9 @@ export const LoginForm = () => {
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        login(formState)     
+        if(formState.email !== '' && formState.password !== ''){
+            login(formState)  
+        }
     }
 
     return (
