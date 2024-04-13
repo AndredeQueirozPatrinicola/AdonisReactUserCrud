@@ -1,55 +1,53 @@
-import { createContext, useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import axios, { AxiosError } from 'axios';
 
+import { createContext, ReactNode, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
-export const AuthContext = createContext({});
+import { Props } from '../types/Props';
+import { UserData } from '../types/UserData';
+import { AuthContextData } from '../types/AuthContextData';
+import { JwtErrorResponse } from '../types/JwtResponse';
+import { AuthErrorMessages } from "../types/AuthErrorMessages";
 
-export const AuthProvider = ( { children } ) => {
+const AuthContext = createContext({} as AuthContextData);
 
-    const navigate = useNavigate();  
-
-	const [ isAuthenticated, setIsAuthenticated ] = useState(
-        localStorage.getItem("token") ? true : false
-    );
-    const [ userData, setUserData ] = useState( {} ); 
-    const [ userRoles, setUserRoles ] = useState(
-        isAuthenticated ? jwtDecode(localStorage.getItem("token")).roles : null
-    );     
-    useEffect( () => {
-        if (isAuthenticated){
-            setUserRoles( jwtDecode(localStorage.getItem("token")).roles );
-        }
-    }, [isAuthenticated]);
-
-
-    const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("refreshToken");
-        setUserData({});
-        setIsAuthenticated(false);
-        return <Navigate to="/login" />;
+const AuthProvider = ({children}: Props) => {
+    const navigate = useNavigate();
+  
+    const [authenticated, setAuthenticated] = useState(localStorage.getItem("token") ? true : false);
+    const [ authErrorMessages, setAuthErrorMessages ] = useState<AuthErrorMessages[]>([]);
+  
+    const login = (userData:UserData) => {
+        axios.post('http://localhost:5000/api/auth/login/', {
+            email: userData.email, 
+            password: userData.password
+        })
+        .then((res) => {
+            const data = res.data
+            localStorage.setItem('token', data.token);
+            setAuthenticated(true);
+            navigate("/");
+        })
+        .catch((err: AxiosError) => {
+            const data: JwtErrorResponse | unknown = err.response?.data;
+            if (Array.isArray(data.errors)) {
+                setAuthErrorMessages(prev => [...prev, ...data.errors]);
+            }
+        });
     }
-
-    window.addEventListener('remove-tokens', (e) => {
-        setIsAuthenticated( false );
-    });
-
-    let contextData = {
-        isAuthenticated: isAuthenticated,
-        setIsAuthenticated: setIsAuthenticated,
-
-        logout: logout, 
-
-        userRoles: userRoles,
-        setUserRoles: setUserRoles,
-        userData: userData,
-        setUserData: setUserData,
+  
+    const contextData: AuthContextData = {
+      authenticated,
+      setAuthenticated,
+      login, 
+      authErrorMessages
     };
+    
+    return (
+      <AuthContext.Provider value={contextData}>
+        {children}
+      </AuthContext.Provider>
+    );
+  }
 
-	return (
-		<AuthContext.Provider value={contextData}>
-            {children}
-		</AuthContext.Provider>
-	);
-}
+export {  AuthContext, AuthProvider }

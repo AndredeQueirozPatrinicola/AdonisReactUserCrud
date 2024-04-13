@@ -9,11 +9,9 @@ function App() {
   return (
     <Routes> 
       <Route path="/login" element={<Login />} />
-
       <Route path="/" element={<ProtectedRoute/>} >
           <Route path="/" element={<Home/>}/>
       </Route >
-
     </Routes> 
   )
 }

@@ -4,25 +4,14 @@ import { Navigate, Outlet } from 'react-router-dom'
 import {AuthContext} from '../contexts/AuthContext'
 
 
-export default function ProtectedRoute( { allowedRoles = [] } ){
-	let { isAuthenticated, userRoles } = useContext(AuthContext);
+export default function ProtectedRoute(){
+	let { authenticated } = useContext(AuthContext);
     
-    const isAllowed = () => (
-        userRoles ?
-        userRoles.map( 
-            ( role ) => allowedRoles.includes( role ) )
-        .reduce( 
-            ( isAllowed1, isAllowed2 ) => isAllowed1 || isAllowed2 ) :
-        false
-    );
-      
     return (
 		<> 
-            { !isAuthenticated  ? 
+            { !authenticated  ? 
                 <Navigate to="/login" replace/> : ( 
-                    (isAllowed()) || (allowedRoles.length == 0)  ? 
-                        <Outlet /> :
-                        <Navigate to="/" replace/>
+                    <Outlet />
                 )
             }
 		</> 
