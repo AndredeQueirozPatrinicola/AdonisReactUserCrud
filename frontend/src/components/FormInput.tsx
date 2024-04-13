@@ -10,7 +10,7 @@ interface FormInputProps {
 export const FormInput: React.FC<FormInputProps> = ({ handleChange, placeHolder, inputName, inputType }) => {
     return (
         <input
-            className="m-2 rounded-md h-10 border-2 p-2 focus:border-[#863ec9]"
+            className="m-2 rounded-md h-10 border-2 p-2 focus:border-[#863ec9] focus:outline-none focus:ring-0"
             placeholder={placeHolder}
             type={inputType}
             name={inputName}
