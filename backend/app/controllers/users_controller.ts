@@ -14,7 +14,7 @@ export default class UsersController {
   }
 
   async store({ request }: HttpContext) {
-    const data = request.only(['fullName', 'email', 'password'])
+    const data = request.only(['fullName', 'email', 'password', 'password_confirmation'])
     const payload = await createUserValidator.validate(data)
     const user = await User.create(payload)
     return user
