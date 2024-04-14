@@ -1,20 +1,8 @@
-import { useEffect, useState } from "react";
-import { UserInfos } from  "../types/UserInfos" ;
-import axios from 'axios';
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function UserInfosBox() {
-    const [ userData, setUserData ] = useState({} as UserInfos)
-
-    useEffect(()=>{
-        const getData = async () => {
-            const { fullName, email } = await axios.get('http://localhost:5000/api/accounts/users/6').then(res => res.data)
-            setUserData({
-                fullName,
-                email
-            })
-        }
-        getData()
-    }, [])
+    const { userInfos } = useContext(AuthContext)
 
     return (
         <div className="flex flex-col w-1/3 min-h-40 shadow rounded p-6">
@@ -22,10 +10,10 @@ export default function UserInfosBox() {
 
             <div className="flex flex-col p-4 text-slate-600">
                 <span className="m-2 rounded-md h-10 border-2 p-2">
-                    {userData.fullName}
+                    {userInfos.fullName}
                 </span>
                 <span className="m-2 rounded-md h-10 border-2 p-2">
-                    {userData.email}
+                    {userInfos.email}
                 </span>
             </div>
 

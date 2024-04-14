@@ -1,5 +1,6 @@
 import { UserData } from "./UserData";
 import { AuthErrorMessages } from "./AuthErrorMessages";
+import { UserInfos } from "./UserInfos";
 
 export type AuthContextData = {
     authenticated: boolean;
@@ -8,4 +9,5 @@ export type AuthContextData = {
     logout: () => void,
     authErrorMessages: AuthErrorMessages[];
     setAuthErrorMessages: (authErrorMessages: AuthErrorMessages[]) => void;
+    userInfos: UserInfos
 };

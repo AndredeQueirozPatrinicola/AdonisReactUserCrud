@@ -1,4 +1,6 @@
 import axios, { AxiosError } from 'axios';
+import { baseURL } from '../api/baseUrl';
+import { fetchData } from '../api/fetchData';
 
 import { createContext, ReactNode, useEffect, useState } from 'react'
 
@@ -6,6 +8,7 @@ import { useNavigate, Navigate } from 'react-router-dom';
 
 import { Props } from '../types/Props';
 import { UserData } from '../types/UserData';
+import { UserInfos as IUserinfos } from '../types/UserInfos';
 import { AuthContextData } from '../types/AuthContextData';
 import { JwtErrorResponse } from '../types/JwtResponse';
 import { AuthErrorMessages } from "../types/AuthErrorMessages";
@@ -16,16 +19,20 @@ const AuthProvider = ({children}: Props) => {
     const navigate = useNavigate();
   
     const [authenticated, setAuthenticated] = useState(localStorage.getItem("token") ? true : false);
-    const [ authErrorMessages, setAuthErrorMessages ] = useState<AuthErrorMessages[]>([]);
-  
+    const [authErrorMessages, setAuthErrorMessages ] = useState<AuthErrorMessages[]>([]);
+    const [userInfos, setUserInfos] = useState<IUserinfos>({} as IUserinfos)
+
     const login = (userData:UserData) => {
-        axios.post('http://localhost:5000/api/auth/login/', {
+        axios.post(`${baseURL}/api/auth/login/`, {
             email: userData.email, 
             password: userData.password
         })
         .then((res) => {
             const data = res.data
-            localStorage.setItem('token', data.token);
+            
+            localStorage.setItem('token', data.token.token);
+            localStorage.setItem('user', data.user)
+
             setAuthenticated(true);
             setAuthErrorMessages([])
             navigate("/");
@@ -40,10 +47,37 @@ const AuthProvider = ({children}: Props) => {
 
     const logout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
+
         setAuthenticated(false);
         setAuthErrorMessages([])
+        
         return <Navigate to="/login" />;
     }
+
+    useEffect(() => {
+      const getUserData = async (id: string) => {
+        await fetchData(`/api/accounts/users/me/${id}`)
+          .then((res) => {
+            const {id, fullName, email} = res.data
+            setUserInfos({
+              id,
+              fullName,
+              email
+            })
+          })
+          .catch((err: AxiosError) => {
+            console.error(err)
+          })
+      }
+      if(authenticated){
+        const userId = localStorage.getItem('user')
+        console.log(localStorage.getItem('user'))
+        if(userId){
+          getUserData(userId)
+        }
+      }
+    }, [authenticated])
   
     const contextData: AuthContextData = {
       authenticated,
@@ -53,7 +87,9 @@ const AuthProvider = ({children}: Props) => {
       logout,
 
       authErrorMessages,
-      setAuthErrorMessages
+      setAuthErrorMessages,
+
+      userInfos      
     };
     
     return (

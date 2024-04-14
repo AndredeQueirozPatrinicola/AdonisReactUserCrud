@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import { baseURL } from '../api/baseUrl';
 
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../contexts/AuthContext"
@@ -38,13 +39,16 @@ export const SignupForm = () => {
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        axios.post('http://localhost:5000/api/accounts/users/', {
-            fullName: formState.fullName,
-            email: formState.email, 
-            password: formState.password,
-            password_confirmation: formState.password_confirmation 
-        })
+        
+        axios.post(`${baseURL}/api/accounts/users/`, {
+                fullName: formState.fullName,
+                email: formState.email, 
+                password: formState.password,
+                password_confirmation: formState.password_confirmation 
+            }
+        )
         .then((res) => {
+            console.log(res)
             toast("Usuario criado com sucesso!")
             setFieldErrors(initialValue)
             navigate("/login");
