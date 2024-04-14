@@ -15,7 +15,10 @@ services:
       - |
         cd /app/ &&
         npm install &&
+        node ace migration:run &&
         npm run dev
+    depends_on:
+      - db
 
   react:
     image: frontend-dev:latest
