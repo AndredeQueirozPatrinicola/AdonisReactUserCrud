@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 
 import { createContext, ReactNode, useEffect, useState } from 'react'
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 
 import { Props } from '../types/Props';
 import { UserData } from '../types/UserData';
@@ -27,6 +27,7 @@ const AuthProvider = ({children}: Props) => {
             const data = res.data
             localStorage.setItem('token', data.token);
             setAuthenticated(true);
+            setAuthErrorMessages([])
             navigate("/");
         })
         .catch((err: AxiosError) => {
@@ -36,12 +37,20 @@ const AuthProvider = ({children}: Props) => {
             }
         });
     }
+
+    const logout = () => {
+        localStorage.removeItem("token");
+        setAuthenticated(false);
+        setAuthErrorMessages([])
+        return <Navigate to="/login" />;
+    }
   
     const contextData: AuthContextData = {
       authenticated,
       setAuthenticated,
 
       login, 
+      logout,
 
       authErrorMessages,
       setAuthErrorMessages
