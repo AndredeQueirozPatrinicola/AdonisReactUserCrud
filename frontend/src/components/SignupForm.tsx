@@ -2,6 +2,8 @@ import axios, { AxiosError } from 'axios';
 
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../contexts/AuthContext"
+import { useNavigate } from 'react-router-dom';
+import { useToast } from '../hooks/useToast';
 
 import { FormInput } from "./FormInput"
 import { FormButton } from "./FormButton"
@@ -23,7 +25,8 @@ export const SignupForm = () => {
     const [ formState, setFormState ] = useState(initialValue)
     const [ fieldErrors, setFieldErrors ] = useState(initialValue)
     const { authErrorMessages } = useContext(AuthContext)
-
+    const navigate = useNavigate();
+    const { toast } = useToast()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -42,8 +45,9 @@ export const SignupForm = () => {
             password_confirmation: formState.password_confirmation 
         })
         .then((res) => {
-            const data = res.data
-            console.log(data)
+            toast("Usuario criado com sucesso!")
+            setFieldErrors(initialValue)
+            navigate("/login");
         })
         .catch((err: AxiosError) => {
             const data: JwtErrorResponse | unknown = err.response?.data;
