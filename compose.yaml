@@ -8,7 +8,7 @@ services:
       - ./backend:/app
       - .env:/app/.env
     ports: 
-      - 5000:5000
+      - '${PORT:-5000}:5000'
     command:
       - sh
       - -c
@@ -18,7 +18,8 @@ services:
         node ace migration:run &&
         npm run dev
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   react:
     image: frontend-dev:latest
@@ -29,7 +30,7 @@ services:
       - ./frontend:/app
       - .env:/app/.env
     ports: 
-      - 3000:3000
+      - '${FRONT_PORT:-3000}:3000'  
     command:
       - sh
       - -c
@@ -42,17 +43,21 @@ services:
     image: mysql
     restart: always
     environment:
-      MYSQL_DATABASE: 'adonis'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: '${DB_DATABASE:-adonis}'  
+      MYSQL_USER: '${DB_USER:-user}'  
+      MYSQL_PASSWORD: '${DB_PASSWORD:-password}' 
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD:-password}' 
     ports:
-      - '3306:3306'
+      - '${DB_PORT:-3306}:3306'
     expose:
-      - '3306'
+      - '${DB_PORT:-3306}'  
     volumes:
       - mysqldb:/var/lib/mysql
-
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u ${DB_DATABASE:-adonis} --password=${DB_PASSWORD:-password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
 volumes:
   mysqldb:
