@@ -49,7 +49,7 @@ export const SignupForm = () => {
         )
         .then((res) => {
             console.log(res)
-            toast("Usuario criado com sucesso!")
+            toast("User registered succesfully!")
             setFieldErrors(initialValue)
             navigate("/login");
         })
