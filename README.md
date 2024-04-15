@@ -40,6 +40,7 @@ Simple User Crud application using [React](https://react.dev/reference/react) an
     DB_PASSWORD=password
     DB_DATABASE=adonis
     SESSION_DRIVER=cookie
+    FRONT_PORT=3000
 ####
 
 ## Docker
@@ -54,3 +55,10 @@ Simple User Crud application using [React](https://react.dev/reference/react) an
 
     docker compose up
 
+#### Access:
+
+1. UI
+    http://localhost:{FRONT_PORT}
+
+2. API
+    http://localhost:{PORT}/api/...
